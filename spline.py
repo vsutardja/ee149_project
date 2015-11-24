@@ -83,8 +83,8 @@ if __name__ == '__main__':
         else:
             return i-K+1
 
-    #data_points = [(1, 2), (2, 2), (4, 2), (4, 4), (2, 4), (1, 4), (2, 5), (2, 6)]
-    data_points = random_points(7)
+    data_points = [(1, 2), (2, 2), (4, 3), (4, 4), (2, 4), (1, 5), (2, 6)]
+    #data_points = random_points(7)
     print 'data points:', data_points
     n = len(data_points)
     x = [i for i,j in data_points]
@@ -93,8 +93,19 @@ if __name__ == '__main__':
     print 'control_points:', cont
     cont_x = [i for i,j in cont]
     cont_y = [j for i,j in cont]
-    plt.scatter(x, y)
     plt.hold(True)
+    plt.scatter(x, y)
+
+    plt.axis([0, 5, 0, 7])
+    plt.show()
+
+    plt.scatter(x, y)
+    plt.scatter(cont_x, cont_y, color='red')
+
+    plt.axis([0, 5, 0, 7])
+    plt.show()
+
+    plt.scatter(x, y)
     plt.scatter(cont_x, cont_y, color='red')
     px, py = interpolate(cont)
     t = np.linspace(0, len(data_points)-1, 10*n)
@@ -102,4 +113,6 @@ if __name__ == '__main__':
     y_vals = [py(i) for i in t]
     plt.plot(x_vals, y_vals)
     #plt.savefig('img/spline%d.png' % n)
+
+    plt.axis([0, 5, 0, 7])
     plt.show()
