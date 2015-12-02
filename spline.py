@@ -120,8 +120,19 @@ if __name__ == '__main__':
     print 'control_points:', cont
     cont_x = [i for i,j in cont]
     cont_y = [j for i,j in cont]
-    plt.scatter(x, y)
     plt.hold(True)
+    plt.scatter(x, y)
+
+    plt.axis([0, 5, 0, 7])
+    plt.show()
+
+    plt.scatter(x, y)
+    plt.scatter(cont_x, cont_y, color='red')
+
+    plt.axis([0, 5, 0, 7])
+    plt.show()
+
+    plt.scatter(x, y)
     plt.scatter(cont_x, cont_y, color='red')
     px, py = interpolate(cont)
     t = np.linspace(0, len(data_points)-1, 10*n)
