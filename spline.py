@@ -72,6 +72,32 @@ def interpolate(cont):
 def random_points(n, x=8, y=8):
     return [(random()*x, random()*y) for _ in range(n)]
 
+def roc(x_vals, y_vals):
+    # x_diff = np.gradient(x_vals)
+    x_diff = np.ediff1d(x_vals)
+    # y_diff = np.gradient(y_vals)
+    y_diff = np.ediff1d(y_vals)
+    dy = y_diff / x_diff
+    # dy_diff = np.gradient(dy)
+    dy_diff = np.ediff1d(dy, to_begin=dy[1]-dy[0])
+    d2y = dy_diff / x_diff
+    R = np.power(1 + np.square(dy), 1.5) / d2y
+    for i in range(1,len(R)):
+        if x_vals[i] - x_vals[i-1] < 0:
+            if i == 1:
+                R[i-1] = -R[i-1]
+            R[i] = -R[i]
+    return R
+
+def wheel_speed(r, v=1, b=230):
+    spd = np.copy(r)
+    for i in range(len(spd)):
+        if spd[i] > 0:
+            spd[i] = v * (spd[i] + b / 2) / spd[i]
+        elif spd[i] < 0:
+            spd[i] = v * (spd[i] - b / 2) / spd[i]
+    return spd
+
 # n + K - 2 nonzero functions, from i = 0 to N + K - 3
 if __name__ == '__main__':
     K = 4
@@ -83,8 +109,9 @@ if __name__ == '__main__':
         else:
             return i-K+1
 
-    #data_points = [(1, 2), (2, 2), (4, 2), (4, 4), (2, 4), (1, 4), (2, 5), (2, 6)]
-    data_points = random_points(7)
+    np.set_printoptions(suppress=True)
+    data_points = [(1, 2), (2, 2), (4, 2), (4, 4), (2, 4), (1, 4), (2, 5), (2, 6)]
+    # data_points = random_points(7)
     print 'data points:', data_points
     n = len(data_points)
     x = [i for i,j in data_points]
@@ -102,4 +129,24 @@ if __name__ == '__main__':
     y_vals = [py(i) for i in t]
     plt.plot(x_vals, y_vals)
     #plt.savefig('img/spline%d.png' % n)
+
+    r = roc(x_vals, y_vals)
+    v = wheel_speed(r)
+
+    pts = []
+    pts2 = []
+
+    for i in range(len(r)):
+        if abs(r[i]) > 5:
+            pts.append([x_vals[i], y_vals[i]])
+            r[i] = 0
+            v[i] = 100
+        if abs(r[i]) < 0.1:
+            pts2.append([x_vals[i], y_vals[i]])
+    print r
+    print v
+
+    plt.plot(*zip(*pts2), marker='o', color='g', ls='')
+    plt.plot(*zip(*pts), marker='o', color='y', ls='')
+
     plt.show()
