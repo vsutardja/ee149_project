@@ -110,7 +110,8 @@ if __name__ == '__main__':
             return i-K+1
 
     np.set_printoptions(suppress=True)
-    data_points = [(1, 2), (2, 2), (4, 2), (4, 4), (2, 4), (1, 4), (2, 5), (2, 6)]
+    data_points = [(50, 100), (100, 100), (200, 100), (200, 200), (100, 200), (50, 200), (100, 250), (100, 300)]
+    # data_points = [(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (4, 5), (3, 5), (2, 5), (1, 5), (1, 4), (1, 3), (1, 2)]
     # data_points = random_points(7)
     print 'data points:', data_points
     n = len(data_points)
@@ -148,12 +149,15 @@ if __name__ == '__main__':
     pts2 = []
 
     for i in range(len(r)):
-        if abs(r[i]) > 5:
-            pts.append([x_vals[i], y_vals[i]])
-            r[i] = 0
-            v[i] = 100
-        if abs(r[i]) < 0.1:
-            pts2.append([x_vals[i], y_vals[i]])
+        r[i] *= 20
+
+    # for i in range(len(r)):
+    #     if abs(r[i]) > 150:
+    #         pts.append([x_vals[i], y_vals[i]])
+    #         r[i] = 0
+    #         v[i] = 100
+    #     if abs(r[i]) < 0.1:
+    #         pts2.append([x_vals[i], y_vals[i]])
     print r
     print v
 
