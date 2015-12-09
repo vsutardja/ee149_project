@@ -18,20 +18,18 @@
 #include <netdb.h>
 #include <string.h>
 #include <sys/fcntl.h>
-
+#include <stdio.h>
+#include <stdlib.h>
+#include "myrio/UART.h"
+#include "kobukiDriver/kobukiActuator.h"
 
 /* accelerometer */
 
-
 void KobukiNavigationStatechart(
-	const int16_t 				maxWheelSpeed,						/* (in) maximum wheel speed, in mm/s */
-	const int32_t 				netDistance,						/* (in) net distance, in mm */
-	const int32_t 				netAngle,							/* (in) net angle, in deg */
-	const KobukiSensors_t 	sensors,							/* (in) irobot sensors */
-	const accelerometer_t 		accelAxes,								/* (in) filtered accelerometer, in g */
-	int16_t * const 			pRightWheelSpeed,					/*(out) right wheel speed */
-	int16_t * const 			pLeftWheelSpeed,					/*(out) left wheel speed */
-	const bool					isSimulator							/* (in) statechart is executing within a simulator */
+	const int16_t 				maxWheelSpeed,
+	int16_t * const 			pRadius,
+	int16_t * const 			pSpeed,
+	MyRio_Uart *				uart_p
 );
 
 #endif /* IROBOTNAVIGATIONSTATECHART_H_ */
