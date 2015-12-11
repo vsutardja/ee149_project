@@ -44,7 +44,6 @@ int main(int argc, char **argv){
 	NiFpga_Status status = 0;
 
 	int32_t drive_status = 0;
-	int32_t sensor_status = 0;
 
 	MyRio_Uart uart;
     uart.name = "ASRL2::INSTR";
@@ -54,26 +53,9 @@ int main(int argc, char **argv){
 	Uart_Clear(&uart);
 
 
-	/* Hardware peripherals */
-	 MyRio_Accl				accelDevice;
 
-	/* sensor inputs */
-	KobukiSensors_t			sensors;				/* kobuki sensors */
-	int32_t  			    netDistance = 0;			/* net distance the robot has traveled, in mm */
-	double				netAngle= 0;				/* net angle through which the robot has turned, in deg */
-	accelerometer_t			accelValue = {0.0,0.0,0.0};	/* accelerometer, in g */
-
-	/* actuator outputs */
-	int16_t					leftWheelSpeed = 0;		/* speed of the left wheel, in mm/s */
-	int16_t					rightWheelSpeed = 0;	/* speed of the right wheel, in mm/s */
-
-	accelDevice.xval = ACCXVAL;
-	accelDevice.yval = ACCYVAL;
-	accelDevice.zval = ACCZVAL;
-	accelDevice.scale_wght = ACCSCALEWGHT_CST;
-
-	Accel_Scaling(&accelDevice);
-
+	int16_t                 radius = 0;
+	int16_t                 speed = 0;
 
 	/*
 	 * Open the myRIO NiFpga Session.
@@ -82,70 +64,23 @@ int main(int argc, char **argv){
 	 */
 	status = MyRio_Open();
 
-	accelerometer_t accelValue0;
-	double accL=0;//accumulative distance travel of the left wheel
-	double accR=0;//accumulative distance travel of the right wheel
-	double distanceAccL=0;
-	double distanceAccR=0;
-	uint16_t prevL=sensors.LeftWheelEncoder; //store value of previous reading of left wheel encoder
-	uint16_t prevR=sensors.RightWheelEncoder;//store value of previous reading of right wheel encoder
-	int firstRun=1; //flag to indicate this is the firstRun this will be used to do integrating left and right wheel encoder.
 	int iter = 0;
+	NiFpga_WriteU8 (myrio_session , DOLED30 , 0x0);
 	while(!NiFpga_IsError(status)){
-		sensor_status = kobukiSensorPoll(&uart, &sensors);
-		if(sensor_status < VI_SUCCESS ){
-			printf("kobukiSensorPoll failed with sensor_status: %d\n", sensor_status );
-		}
-		if (firstRun){
-			prevL=sensors.LeftWheelEncoder;
-			prevR=sensors.RightWheelEncoder;
-			firstRun=0;
-		}
-		distanceAccL+=abs((int16_t)(sensors.LeftWheelEncoder-prevL));
-		distanceAccR+=abs((int16_t)(sensors.RightWheelEncoder-prevR));
-		accL += ((int16_t)(sensors.LeftWheelEncoder-prevL)); //casting the difference to int16 mimic the clock arithmetic on each wheel encoder
-		accR += ((int16_t)(sensors.RightWheelEncoder-prevR));//casting the difference to int16 mimic the clock arithmetic on each wheel encoder
-		prevL=sensors.LeftWheelEncoder;
-		prevR=sensors.RightWheelEncoder;
-		//netDistance = (accL+ accR) * .08532 /2.0;
-		netDistance = (distanceAccL+ distanceAccR) * .08532 /2.0;
-		netAngle    = normalized180(((accR - accL) * .021255)); //Normilized netangle to -180 to 180
-		/* Read and filter accelerometer */
-		accelValue0 = accelValue;
-		accelValue.x = Accel_ReadX(&accelDevice);
-		accelValue.y = Accel_ReadY(&accelDevice);
-		accelValue.z = Accel_ReadZ(&accelDevice);
-
-		/* exponential lowpass filter */
-		accelValue.x = accelSmoothing * accelValue.x + (1 - accelSmoothing) * accelValue0.x;
-		accelValue.y = accelSmoothing * accelValue.y + (1 - accelSmoothing) * accelValue0.y;
-		accelValue.z = accelSmoothing * accelValue.z + (1 - accelSmoothing) * accelValue0.z;
-
-
-		// TODO : ADD KEEP ALIVE INSTRUCTION
-
-		//accelValue.x = accelValue.y = accelValue.z = 0.0;
-
-		/* Execute statechart */
-		if(iter % 20 == 0) {
-			KobukiNavigationStatechart(WHEEL_SPEED,netDistance,netAngle,sensors,accelValue,&rightWheelSpeed,&leftWheelSpeed,false);
-			printf("Driving with speeds %d %d\n", leftWheelSpeed, rightWheelSpeed);
+		if(iter % 16 == 0) {
+			NiFpga_WriteU8 (myrio_session , DOLED30 , 0x01);
+			KobukiNavigationStatechart(WHEEL_SPEED,&radius,&speed,&uart);
+			NiFpga_WriteU8 (myrio_session , DOLED30 , 0x00);
+			printf("Driving with speeds %d %d\n", radius, speed);
 		}
 
-		drive_status = kobukiDriveDirect(&uart, leftWheelSpeed, rightWheelSpeed);
+		drive_status = kobukiDriveRadius(&uart, radius, speed);
 		if (drive_status < VI_SUCCESS){
-		//	printf("Drive command failed with status %d\n", drive_status);
+			printf("Drive command failed with status %d\n", drive_status);
 			return -1;
 		}
-		// This is example how to turn on LED0 . DOLED30 is the address of the LED[0-3] lowest bit is LED0
-		//LED can be useful to debug when there's no other communication method .
-		NiFpga_WriteU8 (myrio_session , DOLED30 , 0x01);
-
-		//Wait until 80ms pass
-		waitUntilNextMsMultiple(80);
+		waitUntilNextMsMultiple(60);
 		iter += 1;
-
-
 	}
 
 	return status;

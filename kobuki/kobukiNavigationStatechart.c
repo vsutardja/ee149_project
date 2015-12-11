@@ -28,7 +28,7 @@ typedef enum{
 #define DEFAULT_PORT        (1234)
 
 void initializeSocket() {
-	int clilen;
+	unsigned int clilen;
 	struct sockaddr_in serv_addr, cli_addr;
 	bzero((char *) &serv_addr, sizeof(serv_addr));
 	serv_addr.sin_family = AF_INET;
@@ -38,15 +38,13 @@ void initializeSocket() {
 	if (socket < 0) {
 		perror("error opening socket");
 	    exit(1);
-	} else {
-		printf("%s\n", "hi");
 	}
 
 	if (bind(sockfd, (struct sockaddr *) &serv_addr, sizeof(serv_addr)) < 0) {
 		perror("error binding");
 		exit(2);
 	}
-	printf("waiting for client connection\n");
+	printf("waiting for client connection on port %d\n", DEFAULT_PORT);
 	listen(sockfd, 5);
 	clilen = sizeof(cli_addr);
 	newsockfd = accept(sockfd, (struct sockaddr *) &cli_addr, &clilen);
@@ -61,15 +59,13 @@ void parseSpeeds(char *buf, int *speeds) {
 
 void KobukiNavigationStatechart(
 	const int16_t 				maxWheelSpeed,
-	const int32_t 				netDistance,
-	const int32_t 				netAngle,
-	const KobukiSensors_t		sensors,
-	const accelerometer_t		accelAxes,
-	int16_t * const 			pRightWheelSpeed,
-	int16_t * const 			pLeftWheelSpeed,
-	const bool					isSimulator
+	int16_t * const 			pRadius,
+	int16_t * const 			pSpeed,
+	MyRio_Uart *				uart_p
 	){
 	if (sockfd < 0) {
+		printf("Driving\n");
+		kobukiDriveRadius(uart_p, 0, 0);
 		initializeSocket();
 	}
 	fd_set rfds;
@@ -93,7 +89,7 @@ void KobukiNavigationStatechart(
 			perror("error reading from socket");
 			exit(3);
 		} else if (n == 0) {
-			perror("nothing");
+			printf("connection closed\n");
 			exit(4);
 		}
 		printf("message received: %s\n", buffer);
@@ -103,113 +99,6 @@ void KobukiNavigationStatechart(
 		printf("No data. Using old values %d %d\n", speeds[0], speeds[1]);
 	}
 	printf("speeds: %d %d\n", speeds[0], speeds[1]);
-	*pLeftWheelSpeed = speeds[0];
-	*pRightWheelSpeed = speeds[1];
-
-	// local state
-	static robotState_t 		state = DRIVE;				// current program state
-	static robotState_t			unpausedState = DRIVE;			// state history for pause region
-	static int32_t				distanceAtManeuverStart = 0;	// distance robot had travelled when a maneuver begins, in mm
-	static int32_t				angleAtManeuverStart = 0;		// angle through which the robot had turned when a maneuver begins, in deg
-
-	// outputs
-	int16_t						leftWheelSpeed = 0;				// speed of the left wheel, in mm/s
-	int16_t						rightWheelSpeed = 0;			// speed of the right wheel, in mm/s
-
-	//*****************************************************
-	// state data - process inputs                        *
-	//*****************************************************
-
-
-     printf("checking state\n");
-	 if (state == INITIAL
-		|| state == PAUSE_WAIT_BUTTON_RELEASE
-		|| state == UNPAUSE_WAIT_BUTTON_PRESS
-		|| state == UNPAUSE_WAIT_BUTTON_RELEASE
-		|| sensors.buttons.B0				// pause button
-		){
-		switch (state){
-		case INITIAL:
-			// set state data that may change between simulation and real-world
-			if (isSimulator){
-			}
-			else{
-			}
-			state = UNPAUSE_WAIT_BUTTON_PRESS; // place into pause state
-			break;
-		case PAUSE_WAIT_BUTTON_RELEASE:
-			// remain in this state until released before detecting next press
-			if (!sensors.buttons.B0){
-				state = UNPAUSE_WAIT_BUTTON_PRESS;
-			}
-			break;
-		case UNPAUSE_WAIT_BUTTON_RELEASE:
-			// user pressed 'pause' button to return to previous state
-			if (!sensors.buttons.B0){
-				state = unpausedState;
-			}
-			break;
-		case UNPAUSE_WAIT_BUTTON_PRESS:
-			// remain in this state until user presses 'pause' button
-			if (sensors.buttons.B0){
-				state = UNPAUSE_WAIT_BUTTON_RELEASE;
-			}
-			break;
-		default:
-			// must be in run region, and pause button has been pressed
-			unpausedState = state;
-			state = PAUSE_WAIT_BUTTON_RELEASE;
-			break;
-		}
-	}
-	//*************************************
-	// state transition - run region      *
-	//*************************************
-//	else if (state == DRIVE && abs(netDistance - distanceAtManeuverStart) >= 250){
-//		angleAtManeuverStart = netAngle;
-//		distanceAtManeuverStart = netDistance;
-//		state = TURN;
-//	}
-//	else if (state == TURN && abs(netAngle - angleAtManeuverStart) >= 90){
-//		angleAtManeuverStart = netAngle;
-//		distanceAtManeuverStart = netDistance;
-//		state = DRIVE;
-//	}
-	// else, no transitions are taken
-
-	//*****************
-	//* state actions *
-	//*****************
-	printf("About to perform action\n");
-	switch (state){
-	case INITIAL:
-	case PAUSE_WAIT_BUTTON_RELEASE:
-	case UNPAUSE_WAIT_BUTTON_PRESS:
-	case UNPAUSE_WAIT_BUTTON_RELEASE:
-		// in pause mode, robot should be stopped
-		leftWheelSpeed = rightWheelSpeed = 0;
-		break;
-
-	case DRIVE:
-		// full speed ahead!
-		//leftWheelSpeed = rightWheelSpeed = 200;
-		printf("In drive\n");
-		leftWheelSpeed = speeds[0];
-		rightWheelSpeed = speeds[1];
-		break;
-
-	case TURN:
-		leftWheelSpeed = 100;
-		rightWheelSpeed = -leftWheelSpeed;
-		break;
-
-	default:
-		// Unknown state
-		leftWheelSpeed = rightWheelSpeed = 0;
-		break;
-	}
-
-
-	*pLeftWheelSpeed = leftWheelSpeed;
-	*pRightWheelSpeed = rightWheelSpeed;
+	*pRadius = speeds[0];
+	*pSpeed = speeds[1];
 }
