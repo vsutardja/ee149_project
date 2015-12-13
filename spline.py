@@ -1,4 +1,5 @@
 from __future__ import division
+import re
 import matplotlib.pyplot as plt
 import numpy as np
 from poly import *
@@ -7,12 +8,155 @@ import socket
 from time import sleep
 from math import floor
 from select import select
+from transformations import euler_from_quaternion
+from threading import Lock, Thread
+from Queue import Queue
+from sys import exit
+import argparse
 
 time_interval = 1.5
-scale = 8.25
 o_timeout = 0.001
 x_scale = 200.0
 y_scale = 280.0
+direction = False
+
+def update_quadrant(f, s_lock, d_lock):
+    global direction
+    try:
+        while True:
+            sleep(0.2)
+            s_lock.acquire()
+            status = select([s], [], [], o_timeout)[0]
+            l = None
+            if len(status) > 0:
+                print 'reading angle data'
+                angle_data = s.recv(1024)
+                print 'angle data', angle_data
+                angle_data = angle_data[-50:]
+                if len(angle_data) > 1:
+                    l = int(angle_data.split('\n')[-2])
+            s_lock.release()
+            if l is None:
+                continue
+            print 'l:', l
+            l = l % 360
+            d_lock.acquire()
+            print 'netAngle', l
+            if l > 90 and l < 270:
+                direction = True
+            else:
+                direction = False
+            d_lock.release()
+    except Exception as e:
+        print 'update_quadrant encountered exception:'
+        print e
+        print 'update_quadrant exiting'
+
+def drive_kobuki(s, o_sock, rot, s_lock, d_lock):
+    f = open('position_data', 'w')
+    pattern = re.compile('(f [^g]+g)')
+    try:
+        for i, (curr_x, curr_y) in enumerate(rot):
+            sleep(time_interval)
+            status = select([o_sock], [], [], o_timeout)[0]
+            if len(status) > 0:
+                pos_data = o_sock.recv(4096)
+                pos_data = pos_data[-100:]
+                curr_data = None
+                for curr_data in pattern.finditer(pos_data):
+                    pass
+                if not curr_data:
+                    print 'no data from OptiTrack'
+                    continue
+                curr_data = curr_data.group()
+                print 'curr_data:', curr_data
+                vals = curr_data.rstrip('g\n').split(',')
+                print 'vals:', vals
+                try:
+                    x, y = 1000*float(vals[1]), -1000*float(vals[3])
+                    print 'actual position:', (x, y)
+                    print 'next position:', (curr_x, curr_y)
+                    qx, qy, qz, qw = map(float, vals[-4:])
+                    d_lock.acquire()
+                    local_dir = direction
+                    d_lock.release()
+                    yaw = get_yaw(qx, qy, qz, qw, local_dir)
+                    print 'yaw', yaw*180/np.pi
+                    radius, speed = get_roc((x, y), (curr_x, curr_y), yaw, f)
+                    s_lock.acquire()
+                    print 'sending', radius, speed
+                    s.send('%d %d' % (radius, speed))
+                    #s.send('1 20')
+                    s_lock.release()
+                    continue
+                except Exception as e:
+                    print e
+                    s.send('0 0')
+    except KeyboardInterrupt:
+        print 'closing'
+        s.shutdown(2)
+        s.close()
+        f.close()
+        print 'closed'
+        return
+    print 'closing'
+    s.shutdown(2)
+    s.close()
+    f.close()
+    print 'closed'
+
+
+class DummySocket():
+    def __init__(self):
+        pass
+    def send(self, arg):
+        print 'sending', arg
+    def shutdown(self):
+        pass
+    def close(self):
+        pass
+
+def get_roc(p1, p2, orientation, f):
+    x1, y1 = p1
+    x2, y2 = p2
+    dy = y2-y1
+    dx = x2-x1
+    dist = np.sqrt(dx**2 + dy**2)
+    reference = (1, 0)
+    angle = np.arccos((dx*reference[0] + dy*reference[1]) / dist)
+    if dy < 0:
+        angle = -angle
+    if angle == orientation:
+        return 0
+    theta = angle - orientation
+    theta = theta % (2*np.pi)
+    if theta > np.pi:
+        theta -= 2*np.pi
+    radius = dist /(2*np.sin(theta))
+    #internal_angle = np.pi/2 - theta
+    center_angle = 2*theta
+    #radius = dist*np.sin(internal_angle)/np.sin(center_angle)
+    center_angle %= (2*np.pi)
+    if center_angle > np.pi:
+        center_angle -= 2*np.pi
+    speed = int(abs(radius*center_angle) / time_interval)
+    print 'get_roc:', 'p1', p1, 'p2', p2, 'orientation', orientation, 'angle', angle, 'theta', theta, 'radius', radius, 'speed', speed
+    f.write('; '.join(map(str, [p1, p2, orientation, angle, theta, radius, speed])) + '\n')
+    if speed > 300 or abs(theta) > np.pi*3/4:
+        print 'setting speed to 0'
+        speed = 0
+    speed = min(speed / time_interval, 100)
+    return radius, speed
+
+def get_yaw(qx, qy, qz, qw, x_neg):
+    print map((lambda i: i*180/np.pi), euler_from_quaternion((qw, qx, qy, qz)))
+    #psi = np.arctan2(2*(qx*qw+qy*qz), 1-2*(qz**2+qw**2))
+    #print 'psi', psi * 180/np.pi
+    theta = np.arcsin(-2*(qx*qz-qw*qy))
+    if x_neg:
+        theta = np.pi - theta
+    theta = theta % (2*np.pi)
+    return theta
 
 def high_pass(sig, mult=0.1):
     new_sig = [(1 + mult)*sig[0]]
@@ -134,28 +278,22 @@ def roc(x_vals, y_vals):
     R = R[:-1]
     return R, speeds
 
-def wheel_speed(r, v=1, b=230):
-    spd = np.copy(r)
-    for i in range(len(spd)):
-        if spd[i] > 0:
-            spd[i] = v * (spd[i] + b / 2) / spd[i]
-        elif spd[i] < 0:
-            spd[i] = v * (spd[i] - b / 2) / spd[i]
-    return spd
-
-def all_wheel_speeds(r, speeds, b=230):
-    new_speeds = []
-    for radius, speed in zip(r, speeds):
-        if radius > 0:
-            new_speeds.append(speed * (radius + b / 2) / radius)
-        elif radius < 0:
-            new_speeds.append(speed * (radius - b / 2) / radius)
-        else:
-            new_speeds.append(speed)
-    return new_speeds
-
 # n + K - 2 nonzero functions, from i = 0 to N + K - 3
 if __name__ == '__main__':
+    parser = argparse.ArgumentParser(description='interpolation and control.')
+    parser.add_argument('-k', '--kobuki_ip', type=str, default='192.168.2.9')
+    parser.add_argument('-o', '--opti_ip', type=str, required=True)
+    parser.add_argument('-s', '--scale', type=float, default=5)
+    parser.add_argument('-d', '--dummy', dest='dummy', action='store_true')
+    args = parser.parse_args()
+
+    s_lock = Lock()
+    d_lock = Lock()
+
+    O_HOST = args.opti_ip
+    K_HOST = args.kobuki_ip
+    scale = args.scale
+
     K = 4
     def t(i):
         if i < K:
@@ -166,10 +304,16 @@ if __name__ == '__main__':
             return i-K+1
 
     np.set_printoptions(suppress=True)
-    #data_points = [(50, 100), (100, 100), (200, 100), (200, 200), (100, 200), (50, 200), (100, 250), (100, 300)]
-    with open('data_file') as data_file:
-        x = eval(data_file.readline())
-        y = eval(data_file.readline())
+    #with open('data_file') as data_file:
+        #x = eval(data_file.readline())
+        #y = eval(data_file.readline())
+    x = []
+    y = []
+    for i in range(10):
+        x.append(np.cos(i*np.pi/4))
+        y.append(np.sin(i*np.pi/4))
+    #x = [50, 100, 200, 200, 100, 50, 100, 100]
+    #y = [100, 100, 100, 200, 200, 200, 250, 300]
     x = map((lambda i: i-x[0]), x)
     y = map((lambda i: i-y[0]), y)
     x_ratio = max(abs(max(x)) / x_scale, abs(min(x)) / x_scale)
@@ -179,44 +323,42 @@ if __name__ == '__main__':
     y = map((lambda i: i/ratio), y)
     print 'x:', x
     print 'y:', y
-    #x = map((lambda i: 3*i), x)
-    #y = map((lambda i: 3*i), y)
-    # data_points = [(1, 1), (2, 1), (3, 1), (4, 1), (5, 1), (5, 2), (5, 3), (5, 4), (5, 5), (4, 5), (3, 5), (2, 5), (1, 5), (1, 4), (1, 3), (1, 2)]
-    # data_points = random_points(7)
-    #print 'data points:', data_points
     n = len(x)
-    #print x
-    #x = [i for i,j in data_points]
-    #y = [j for i,j in data_points]
+
     cont = control_points(zip(x, y))
     print 'control_points:', cont
     cont_x = [i for i,j in cont]
     cont_y = [j for i,j in cont]
     plt.hold(True)
-    plt.scatter(x, y)
-    plt.scatter(cont_x, cont_y, color='red')
+    #plt.scatter(x, y)
+    #plt.scatter(cont_x, cont_y, color='red')
+
     px, py = interpolate(cont)
-    t = np.linspace(0, n-1, 10*n)
-    x_vals = [px(i) for i in t]
-    y_vals = [py(i) for i in t]
-    dy = y[1] - y[0]
-    dx = x[1] - x[0]
-    if dx == 0:
-        offset = 0
-    else:
-        offset = np.arctan(float(dy)/dx)
-    rot = map((lambda pos: rotate(pos[0], pos[1], offset)), zip(x_vals, y_vals))
-    #rot = map((lambda p: p[0] * scale, p[1] * scale), rot)
-    for i in range(len(rot)):
-        rot[i] = (rot[i][0] * scale, rot[i][1]*scale)
+    t = np.linspace(0, n-1, 5*n)
+    #flipped because rotated 90 degrees counterclockwise
+    #y_vals = [px(i) for i in t]
+    #x_vals = [-py(i) for i in t]
+    y_vals = [-px(i) for i in t]
+    x_vals = [py(i) for i in t]
+    #dy = y[1] - y[0]
+    #dx = x[1] - x[0]
+    #if dx == 0:
+        #offset = 0
+    #else:
+        #offset = np.arctan(float(dy)/dx)
+    #print zip(x_vals, y_vals)
+    #print 'bad:', x_vals[27], y_vals[27]
+    #x_vals, y_vals = y_vals, map((lambda i: -i), x_vals)
+    #rot = map((lambda pos: rotate(pos[0], pos[1], offset)), zip(x_vals, y_vals))
+    rot = map((lambda p: (p[0] * scale, p[1] * scale)), zip(x_vals, y_vals))
+    #print rot
     #print rot
     #print [x for x, y in rot]
-    #plt.plot([x for x, y in rot], [y for x, y in rot])
-    plt.plot(x_vals, y_vals)
+    plt.plot([x for x, y in rot], [y for x, y in rot])
+    #plt.plot(x_vals, y_vals)
     plt.show()
 
     r, speeds = roc(x_vals, y_vals)
-    #v = wheel_speed(r)
 
 
     for i in range(len(r)):
@@ -226,7 +368,6 @@ if __name__ == '__main__':
             r[i] = 0
         speeds[i] *= 10
         speeds[i] = abs(floor(speeds[i]))
-    #speeds = all_wheel_speeds(r, speeds)
     speeds = map(int, speeds)
     speeds = map((lambda x: x if x < 200 else 200), speeds)
     r = high_pass(r)
@@ -235,15 +376,17 @@ if __name__ == '__main__':
     print 'speeds:', speeds
     print 'r:', r
 
-    K_HOST = '192.168.2.9'
     K_PORT = 1234
-    s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-    print 'connecting to Kobuki'
-    s.connect((K_HOST, K_PORT))
-    print 'connected to Kobuki'
-    s.send('0 0')
+    if args.dummy:
+        s = DummySocket()
+    else:
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        print 'connecting to Kobuki'
+        s.connect((K_HOST, K_PORT))
+        print 'connected to Kobuki'
+        s.send('0 0')
+    #s = DummySocket()
 
-    O_HOST = '10.142.33.186'
     O_PORT = 27015
     o_sock = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
     print 'connecting to OptiTrack'
@@ -254,28 +397,7 @@ if __name__ == '__main__':
     print 'waiting 7 seconds'
     sleep(7)
     #sleep(1)
-    try:
-        for i, (radius, speed) in enumerate(zip(r, speeds)):
-            sleep(time_interval)
-            status = select([o_sock], [], [], o_timeout)[0]
-            if len(status) > 0:
-                pos_data = o_sock.recv(4096)
-                pos_data = pos_data[-100:]
-                curr_data = pos_data.split('f ')[-1]
-                vals = curr_data.split(',')
-                try:
-                    x, y = 1000*float(vals[1]), -1000*float(vals[3])
-                    print 'vals:', vals
-                    print 'perceived position:', rot[i]
-                    print 'actual position:', (x, y)
-                except Exception as e:
-                    print e
-            print 'sending', int(radius), int(speed)
-            if i % 10 == 0:
-                print 'At data point', int(i/10), 'of', n
-            s.send('%d %d' % (radius, speed))
-    except KeyboardInterrupt:
-        print 'closing'
-        s.shutdown(2)
-        s.close()
-        print 'closed'
+    t1 = Thread(target=update_quadrant, args=(s.makefile(), s_lock, d_lock))
+    t1.start()
+    drive_kobuki(s, o_sock, rot, s_lock, d_lock)
+    t1.join()
