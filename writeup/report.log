@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.5.31)  13 DEC 2015 22:51
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.5.31)  13 DEC 2015 23:24
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -840,11 +840,11 @@ LaTeX Font Info:    Try loading font information for U+msb on input line 44.
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
 )
 Package epstopdf Info: Source file: <../spline_basis.eps>
-(epstopdf)                    date: 2015-12-13 22:49:59
-(epstopdf)                    size: 29383 bytes
+(epstopdf)                    date: 2015-12-13 23:19:20
+(epstopdf)                    size: 183858 bytes
 (epstopdf)             Output file: <../spline_basis-eps-converted-to.pdf>
-(epstopdf)                    date: 2015-12-13 22:50:24
-(epstopdf)                    size: 10363 bytes
+(epstopdf)                    date: 2015-12-13 23:19:32
+(epstopdf)                    size: 8269 bytes
 (epstopdf)             Command: <epstopdf --outfile=../spline_basis-eps-convert
 ed-to.pdf ../spline_basis.eps>
 (epstopdf)             \includegraphics on input line 66.
@@ -862,6 +862,31 @@ Overfull \hbox (26.19731pt too wide) in paragraph at lines 66--67
 [][] 
  []
 
+Package epstopdf Info: Source file: <../s_img/spline8.eps>
+(epstopdf)                    date: 2015-12-13 23:23:59
+(epstopdf)                    size: 189461 bytes
+(epstopdf)             Output file: <../s_img/spline8-eps-converted-to.pdf>
+(epstopdf)             Command: <epstopdf --outfile=../s_img/spline8-eps-conver
+ted-to.pdf ../s_img/spline8.eps>
+(epstopdf)             \includegraphics on input line 70.
+runsystem(epstopdf --outfile=../s_img/spline8-eps-converted-to.pdf ../s_img/spl
+ine8.eps)...executed.
+
+Package epstopdf Info: Result file: <../s_img/spline8-eps-converted-to.pdf>
+(epstopdf)                    date: 2015-12-13 23:24:13
+(epstopdf)                    size: 7987 bytes.
+<../s_img/spline8-eps-converted-to.pdf, id=5, 578.16pt x 433.62pt>
+File: ../s_img/spline8-eps-converted-to.pdf Graphic file (type pdf)
+
+<use ../s_img/spline8-eps-converted-to.pdf>
+Package pdftex.def Info: ../s_img/spline8-eps-converted-to.pdf used on input li
+ne 70.
+(pdftex.def)             Requested size: 256.0748pt x 192.05052pt.
+
+Overfull \hbox (26.19731pt too wide) in paragraph at lines 70--71
+[][] 
+ []
+
 Package epstopdf Info: Source file: <../plots/roc.eps>
 (epstopdf)                    date: 2015-12-13 22:36:56
 (epstopdf)                    size: 180704 bytes
@@ -870,24 +895,24 @@ Package epstopdf Info: Source file: <../plots/roc.eps>
 (epstopdf)                    size: 7322 bytes
 (epstopdf)             Command: <epstopdf --outfile=../plots/roc-eps-converted-
 to.pdf ../plots/roc.eps>
-(epstopdf)             \includegraphics on input line 76.
+(epstopdf)             \includegraphics on input line 80.
 Package epstopdf Info: Output file is already uptodate.
-<../plots/roc-eps-converted-to.pdf, id=5, 578.16pt x 433.62pt>
+<../plots/roc-eps-converted-to.pdf, id=6, 578.16pt x 433.62pt>
 File: ../plots/roc-eps-converted-to.pdf Graphic file (type pdf)
 
 <use ../plots/roc-eps-converted-to.pdf>
-Package pdftex.def Info: ../plots/roc-eps-converted-to.pdf used on input line 7
-6.
+Package pdftex.def Info: ../plots/roc-eps-converted-to.pdf used on input line 8
+0.
 (pdftex.def)             Requested size: 256.0748pt x 192.05052pt.
 
-Overfull \hbox (26.19731pt too wide) in paragraph at lines 76--77
+Overfull \hbox (26.19731pt too wide) in paragraph at lines 80--81
 [][] 
  []
 
 [1
 
 {/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <../spli
-ne_basis-eps-converted-to.pdf>]
+ne_basis-eps-converted-to.pdf> <../s_img/spline8-eps-converted-to.pdf>]
 Overfull \vbox (144.55878pt too high) has occurred while \output is active []
 
 
@@ -1255,22 +1280,22 @@ Overfull \vbox (24.55878pt too high) has occurred while \output is active []
 (/Users/manishraghavan/Desktop/fa15/eecs149/proj/ee149_project/writeup/report.a
 ux) ) 
 Here is how much of TeX's memory you used:
- 16677 strings out of 493308
- 333290 string characters out of 6137816
- 374782 words of memory out of 5000000
- 19804 multiletter control sequences out of 15000+600000
+ 16684 strings out of 493308
+ 333489 string characters out of 6137816
+ 374790 words of memory out of 5000000
+ 19809 multiletter control sequences out of 15000+600000
  6439 words of font info for 27 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
  62i,10n,68p,447b,932s stack positions out of 5000i,500n,10000p,200000b,80000s
 </usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.
-pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pf
-b></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb>
-
+pfb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.p
+fb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb
+></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb>
 Output written on /Users/manishraghavan/Desktop/fa15/eecs149/proj/ee149_project
-/writeup/report.pdf (2 pages, 58398 bytes).
+/writeup/report.pdf (2 pages, 66029 bytes).
 PDF statistics:
- 46 PDF objects out of 1000 (max. 8388607)
- 27 compressed objects within 1 object stream
+ 47 PDF objects out of 1000 (max. 8388607)
+ 35 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 23 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 28 words of extra memory for PDF output out of 10000 (max. 10000000)
 
