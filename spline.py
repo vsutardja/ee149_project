@@ -236,7 +236,6 @@ if __name__ == '__main__':
     scale = args.scale
 
     K = 4
-    n = 5
     def t(i):
         if i < K:
             return 0
@@ -284,28 +283,14 @@ if __name__ == '__main__':
     px, py = interpolate(cont)
     t = np.linspace(0, n-1, 5*n)
     #flipped because rotated 90 degrees counterclockwise
-    #y_vals = [px(i) for i in t]
-    #x_vals = [-py(i) for i in t]
+    #x_vals = [px(i) for i in t]
+    #y_vals = [py(i) for i in t]
     y_vals = [-px(i) for i in t]
     x_vals = [py(i) for i in t]
-    #dy = y[1] - y[0]
-    #dx = x[1] - x[0]
-    #if dx == 0:
-        #offset = 0
-    #else:
-        #offset = np.arctan(float(dy)/dx)
-    #print zip(x_vals, y_vals)
-    #print 'bad:', x_vals[27], y_vals[27]
-    #x_vals, y_vals = y_vals, map((lambda i: -i), x_vals)
-    #rot = map((lambda pos: rotate(pos[0], pos[1], offset)), zip(x_vals, y_vals))
     rot = map((lambda p: (p[0] * scale, p[1] * scale)), zip(x_vals, y_vals))
-    #print rot
-    #print rot
-    #print [x for x, y in rot]
     plt.plot([x for x, y in rot], [y for x, y in rot])
     #plt.plot(x_vals, y_vals)
     plt.show()
-    #plt.savefig('thresh_img/spline.png')
 
     K_PORT = 1234
     if args.dummy:

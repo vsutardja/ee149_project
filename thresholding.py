@@ -54,7 +54,7 @@ plt.hold(True)
 plt.scatter(x_vals, y_vals, color='red')
 plt.plot(x_vals, y_vals)
 #plt.show()
-plt.savefig('thresh_img/path.png')
+#plt.savefig('thresh_img/path.png')
 with open ('data_file', 'w') as data_file:
     data_file.write(str(x_vals) + '\n')
     data_file.write(str(y_vals) + '\n')
