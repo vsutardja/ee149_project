@@ -1,0 +1,16 @@
+\begin{thebibliography}{1}
+
+\bibitem{fuhuacheng2012}
+Fuhua Cheng.
+\newblock Curve interpolation using uniform cubic b-spline curves.
+\newblock \url{http://www.cs.uky.edu/~cheng/cs631/Notes/CS631-Chap3-3.pdf}, Sep
+  2012.
+\newblock [Online; accessed 12-December-2015].
+
+\bibitem{wiki:spline}
+Wikipedia.
+\newblock B-spline --- {W}ikipedia{,} the free encyclopedia.
+\newblock \url{https://en.wikipedia.org/wiki/B-spline}, 2015.
+\newblock [Online; accessed 12-December-2015].
+
+\end{thebibliography}
