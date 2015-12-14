@@ -3,15 +3,12 @@ import re
 import matplotlib.pyplot as plt
 import numpy as np
 from poly import *
-from random import random
+#from random import random
 import socket
 from time import sleep
-from math import floor
+#from math import floor
 from select import select
-from transformations import euler_from_quaternion
 from threading import Lock, Thread
-from Queue import Queue
-from sys import exit
 import argparse
 
 time_interval = 1.5
@@ -116,7 +113,7 @@ class DummySocket():
     def close(self):
         pass
 
-def get_roc(p1, p2, orientation, f):
+def get_roc(p1, p2, orientation, f=None):
     x1, y1 = p1
     x2, y2 = p2
     dy = y2-y1
@@ -141,7 +138,8 @@ def get_roc(p1, p2, orientation, f):
         center_angle -= 2*np.pi
     speed = int(abs(radius*center_angle) / time_interval)
     print 'get_roc:', 'p1', p1, 'p2', p2, 'orientation', orientation, 'angle', angle, 'theta', theta, 'radius', radius, 'speed', speed
-    f.write('; '.join(map(str, [p1, p2, orientation, angle, theta, radius, speed])) + '\n')
+    if f is not None:
+        f.write('; '.join(map(str, [p1, p2, orientation, angle, theta, radius, speed])) + '\n')
     if speed > 300 or abs(theta) > np.pi*3/4:
         print 'setting speed to 0'
         speed = 0
@@ -149,7 +147,6 @@ def get_roc(p1, p2, orientation, f):
     return radius, speed
 
 def get_yaw(qx, qy, qz, qw, x_neg):
-    print map((lambda i: i*180/np.pi), euler_from_quaternion((qw, qx, qy, qz)))
     #psi = np.arctan2(2*(qx*qw+qy*qz), 1-2*(qz**2+qw**2))
     #print 'psi', psi * 180/np.pi
     theta = np.arcsin(-2*(qx*qz-qw*qy))
@@ -157,31 +154,6 @@ def get_yaw(qx, qy, qz, qw, x_neg):
         theta = np.pi - theta
     theta = theta % (2*np.pi)
     return theta
-
-def high_pass(sig, mult=0.1):
-    new_sig = [(1 + mult)*sig[0]]
-    for i in range(1, len(sig)):
-        new_sig.append(sig[i] + mult*(sig[i] - sig[i-1]))
-    assert len(new_sig) == len(sig)
-    return new_sig
-
-def to_polar(x, y):
-    r = np.sqrt(x**2 + y**2)
-    theta = np.arctan(float(y)/x)
-    return r, theta
-
-def to_rect(r, theta):
-    x = r*np.cos(theta)
-    y = r*np.sin(theta)
-    return x, y
-
-def rotate(x, y, offset):
-    if x == 0 and y == 0:
-        return 0, 0
-    r, theta = to_polar(x, y)
-    theta -= offset
-    x, y = to_rect(r, theta)
-    return x, y
 
 def memo(f):
     cache = {}
@@ -247,37 +219,6 @@ def interpolate(cont):
     py.setp(Polynomial([y[-1]]), n-3, n-2)
     return px, py
 
-def random_points(n, x=8, y=8):
-    return [(random()*x, random()*y) for _ in range(n)]
-
-def roc(x_vals, y_vals):
-    speeds = []
-    # x_diff = np.gradient(x_vals)
-    x_diff = np.ediff1d(x_vals)
-    # y_diff = np.gradient(y_vals)
-    y_diff = np.ediff1d(y_vals)
-    dy = y_diff / x_diff
-    # dy_diff = np.gradient(dy)
-    dy_diff = np.ediff1d(dy, to_begin=dy[1]-dy[0])
-    d2y = dy_diff / x_diff
-    R = np.power(1 + np.square(dy), 1.5) / d2y
-    R[np.abs(R) > 32000] = 0
-    print R
-    for i in range(1,len(R)):
-        if x_vals[i] - x_vals[i-1] < 0:
-            if i == 1:
-                R[i-1] = -R[i-1]
-            R[i] = -R[i]
-    for i in range(0, len(R)-1):
-        dist = np.sqrt((x_vals[i+1] - x_vals[i])**2 + (y_vals[i+1] - y_vals[i])**2)
-        theta = np.arccos(1 - dist**2 / (2*R[i]**2))
-        if np.isnan(theta) or theta == 0:
-            speeds.append(dist/time_interval)
-        else:
-            speeds.append(R[i]*theta / time_interval)
-    R = R[:-1]
-    return R, speeds
-
 # n + K - 2 nonzero functions, from i = 0 to N + K - 3
 if __name__ == '__main__':
     parser = argparse.ArgumentParser(description='interpolation and control.')
@@ -295,6 +236,7 @@ if __name__ == '__main__':
     scale = args.scale
 
     K = 4
+    n = 5
     def t(i):
         if i < K:
             return 0
@@ -302,18 +244,22 @@ if __name__ == '__main__':
             return n-1
         else:
             return i-K+1
+    #plt.hold(True)
+    #for i in range(n+K-2):
+        #poly = N(i, K)
+        #time = np.linspace(0, n-1, 20*n)
+        #y_vals = [poly(i) for i in time]
+
+        #plt.plot(time, y_vals)
+    #plt.savefig('spline_basis.eps', dpi=400)
+    #plt.show()
+    #from sys import exit
+    #exit()
 
     np.set_printoptions(suppress=True)
-    #with open('data_file') as data_file:
-        #x = eval(data_file.readline())
-        #y = eval(data_file.readline())
-    x = []
-    y = []
-    for i in range(10):
-        x.append(np.cos(i*np.pi/4))
-        y.append(np.sin(i*np.pi/4))
-    #x = [50, 100, 200, 200, 100, 50, 100, 100]
-    #y = [100, 100, 100, 200, 200, 200, 250, 300]
+    with open('data_file') as data_file:
+        x = eval(data_file.readline())
+        y = eval(data_file.readline())
     x = map((lambda i: i-x[0]), x)
     y = map((lambda i: i-y[0]), y)
     x_ratio = max(abs(max(x)) / x_scale, abs(min(x)) / x_scale)
@@ -327,11 +273,13 @@ if __name__ == '__main__':
 
     cont = control_points(zip(x, y))
     print 'control_points:', cont
-    cont_x = [i for i,j in cont]
-    cont_y = [j for i,j in cont]
+    rot_x = [scale*j for j in y]
+    rot_y = [-scale*i for i in x]
+    cont_x = [scale*j for i,j in cont]
+    cont_y = [-scale*i for i,j in cont]
     plt.hold(True)
-    #plt.scatter(x, y)
-    #plt.scatter(cont_x, cont_y, color='red')
+    plt.scatter(rot_x, rot_y)
+    plt.scatter(cont_x, cont_y, color='red')
 
     px, py = interpolate(cont)
     t = np.linspace(0, n-1, 5*n)
@@ -357,24 +305,7 @@ if __name__ == '__main__':
     plt.plot([x for x, y in rot], [y for x, y in rot])
     #plt.plot(x_vals, y_vals)
     plt.show()
-
-    r, speeds = roc(x_vals, y_vals)
-
-
-    for i in range(len(r)):
-        r[i] *= 10
-        r[i] = int(floor(r[i]))
-        if abs(r[i]) > 32000:
-            r[i] = 0
-        speeds[i] *= 10
-        speeds[i] = abs(floor(speeds[i]))
-    speeds = map(int, speeds)
-    speeds = map((lambda x: x if x < 200 else 200), speeds)
-    r = high_pass(r)
-    speeds = high_pass(speeds)
-
-    print 'speeds:', speeds
-    print 'r:', r
+    #plt.savefig('thresh_img/spline.png')
 
     K_PORT = 1234
     if args.dummy:

@@ -5,6 +5,7 @@ import matplotlib
 from matplotlib import rc
 #rc('text', usetex=True)
 rc('font', **{'family': 'serif', 'serif': ['Computer Modern']})
+rc('text',usetex=True)
 
 
 p1 = (50, 100)
@@ -36,4 +37,4 @@ plt.text(73, 89, 'next position')
 plt.text(65, 101, 'planned path')
 plt.gca().set_aspect('equal', adjustable='box')
 #plt.show()
-plt.savefig('plots/roc.png', dpi=600)
+plt.savefig('plots/roc.eps', format='eps', dpi=600)
