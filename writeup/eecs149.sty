@@ -1,0 +1,41 @@
+\usepackage{epsf,algorithm,amsmath,tikz,mathrsfs,amsthm,mathtools,bbm}
+\usepackage{fancyvrb,verbatim}
+\usepackage{parskip}
+\usetikzlibrary{positioning, automata, arrows}
+\usepackage[noend]{algpseudocode}
+\parindent=0pt
+\newcommand{\p}[1]{\left(#1\right)}
+\renewcommand{\b}[1]{\left[#1\right]}
+\newcommand{\floor}[1]{\left\lfloor#1\right\rfloor}
+\newcommand{\ceil}[1]{\left\lceil#1\right\rceil}
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+\newcommand{\argmax}{\operatornamewithlimits{argmax}}
+\newcommand{\mbp}{\mathbb{P}}
+\renewcommand{\P}[1]{\mathbb{P}\p{#1}}
+\newcommand{\E}[1]{\mathbb{E}\b{#1}}
+\newcommand{\Var}[1]{\mathrm{Var}\p{#1}}
+\newcommand{\Cov}[1]{\mathrm{Cov}\p{#1}}
+\usepackage{amsmath,textcomp,amssymb,graphicx,enumerate}
+% Uncomment if things aren't working
+%\usepackage{geometry}
+\def\Name{Manish Raghavan}  % Your name
+\def\SID{23661851}  % Your student ID number
+\def\Session{Spring 2015}
+\newcommand{\alg}[2]{\begin{algorithm}[ht] \caption{#1} \label{alg:#2}
+\begin{algorithmic}[1]}
+\newcommand{\ealg}{\end{algorithmic} \end{algorithm}}
+\newcommand{\aref}[1]{\textbf{Algorithm}~\ref{alg:#1}}
+\newcommand{\Z}{\ensuremath \mathbb{Z}}
+\newcommand{\R}{\ensuremath \mathbb{R}}
+\newcommand{\nextq}{\vspace{2cm} \section{}}
+
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}
+\newtheorem{claim}{Claim}
+\newcommand\numberthis{\addtocounter{equation}{1}\tag{\theequation}}
+
+\textheight=9in
+\textwidth=6.5in
+\topmargin=-.75in
+\oddsidemargin=0in
+\evensidemargin=0.25in
