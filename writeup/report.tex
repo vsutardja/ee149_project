@@ -1,6 +1,7 @@
 \documentclass[10pt]{article}
 \usepackage{eecs149}
 \usepackage{multicol,caption,url}
+\usepackage[margin={2cm,2cm}]{geometry}
 \newenvironment{Figure}
   {\par\medskip\noindent\minipage{\linewidth}}
   {\endminipage\par\medskip}
@@ -14,7 +15,7 @@
 \begin{center}
   Ollie Peng, Manish Raghavan, Victor Sutardja
 \end{center}
-\begin{multicols}{2}
+\begin{multicols*}{2}
   \section*{Overview}
   Using the Kobuki platform from lab, we built a system by which the Kobuki
   drives in a path drawn by the user. Specifically, the user draws a path in the
@@ -34,7 +35,8 @@
       \node (o) [rectangle,draw] at (-3.5,2) {OptiTrack};
 
       \path
-      (k) edge [bend right=30] node [above] {orientation} (m)
+      (k) edge [bend right=30] node [above,align=center] {images;\\orientation}
+      (m)
       (m) edge [bend right=30] node [below] {radius and speed} (k)
       (w) edge node [below,align=center] {position and\\orientation} (m)
       (o) edge node [right,align=center] {full tracking\\data} (w)
@@ -60,6 +62,7 @@
   allowing us to use the correct equations to get the true orientation.
 
   \section*{Image Processing}
+  Compare to naive and say why ours is better
 
   \section*{B-spline Interpolation}
   We chose B-spline interpolation with cubic polynomials because it has the
@@ -129,6 +132,13 @@
   \[C(t) = \sum_{i=0}^{n+2} N_{i,4}(t) \mathbf{P}_i\]
 
   \section*{Timing}
+  \begin{itemize}
+    \item Frame rate from OptiTrack
+    \item Mac polling Kobuki
+    \item Kobuki polling Mac
+    \item Threads
+    \item Mac polling Windows and sending to Kobuki
+  \end{itemize}
 
   \section*{Threading}
   In controlling the Kobuki, we had to send it instructions while also receiving
@@ -144,17 +154,74 @@
   each task.
 
   \section*{Modeling Movement and Control}
+  The Kobuki requires a radius of curvature and wheel speed to control its
+  motion. Our control algorithm takes in the Kobuki's current position, the next
+  position it should go to, its current orientation to produce these quantities.
+  Let $\mathbf{p}_1 = (x_1, y_1)$ be the Kobuki's current position and
+  $\mathbf{p}_2 = (x_2, y_2)$ be the Kobuki's next position. Let
+  $\mathbf{p}_{\Delta} = \mathbf{p}_2 - \mathbf{p}_1$. Let $\phi$ be its
+  current orientation, measured counterclockwise from the positive $x$ axis. The
+  angle $\alpha$ between its current position and its next position is given by
+  \begin{align*}
+    \alpha &= \text{sign}(y_{\Delta})
+    \cos^{-1}\p{\frac{x_{\Delta}}{||\mathbf{p}_{\Delta}||}}
+  \end{align*}
+  The total angle it must turn is $\theta = \alpha - \phi$. The radius of
+  curvature is then given by $r = \frac{||\mathbf{p}_{\Delta}||}{2\sin \theta}$,
+  which is positive if turning left and negative otherwise. The angle through
+  which it must follow an arc of this circle to reach $\mathbf{p}_2$ is $2
+  \theta$, so the speed at which it must travel is $s = \frac{2r\theta}{\tau}$,
+  where $\tau$ is the time alotted for it to reach $\mathbf{p}_2$.
+  Figure~\ref{fig:roc} shows the model of the Kobuki's path from $\mathbf{p}_1$
+  to $\mathbf{p}_2$.
   \begin{Figure}
     \includegraphics[width=9cm]{../plots/roc.eps}
     \captionof{figure}{Movement planning} \label{fig:roc}
   \end{Figure}
 
+  \section*{Challenges}
+  One of the major issues we faced was communication between devices over
+  networks we could not control. Because AirBears2 blocks traffic on some ports,
+  we had to set up our own local networks, while remaining connected to the
+  Internet to stream OptiTrack data. In such a complex network, new problems
+  arose arbitrarily as factors outside our control made our communications
+  unpredictable.
+
   \section*{Results}
+  Shown in Figures~\ref{fig:circ_plot} and~\ref{fig:s_plot} are examples of the
+  Kobuki's actual path (shown in blue) compared to the planned path (shown in
+  red), as tracked by the OptiTrack system.
+  \begin{Figure}
+    \includegraphics[width=9cm]{../plots/circle_plot.png}
+    \captionof{figure}{Actual vs. planned path with low third derivative}
+    \label{fig:circ_plot}
+  \end{Figure}
+
+  For the path shown in Figure~\ref{fig:circ_plot}, the RMS deviation from the
+  path is 6.074 mm. The deviation occurs because the Kobuki is always in a sense
+  ``catching up'' to where it should be on the path, so it tends to cut the
+  corners.
+
   \begin{Figure}
     \includegraphics[width=9cm]{../plots/s_plot.png}
-    \captionof{figure}{Actual vs. planned path} \label{fig:s_plot}
+    \captionof{figure}{Actual vs. planned path with high third derivative} \label{fig:s_plot}
   \end{Figure}
-\end{multicols}
+
+  A video of the Kobuki following the path shown in Figure~\ref{fig:s_plot} can
+  be found at \url{http://www.youtube.com}.
+
+  \section*{Extensions}
+  In order to improve performance on instances with high third derivatives, we
+  could either send commands to the Kobuki more frequently or reduce the speed
+  at which we expect the Kobuki to follow the path. Doing either would allow us
+  to react to deviations from the true path more quickly, thus reducing the
+  overall error.
+
+  Since our final control algorithm only used position, next position, and
+  orientation, it could be easily extended to allow the Kobuki to follow a
+  moving object. As long as the Kobuki's position and orientation are sampled
+  frequently enough, it could follow a moving object using the same techniques.
+\end{multicols*}
 \bibliographystyle{plain}
 \bibliography{refs}
 \end{document}

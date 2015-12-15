@@ -1,4 +1,4 @@
-This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.5.31)  14 DEC 2015 00:57
+This is pdfTeX, Version 3.1415926-2.5-1.40.14 (TeX Live 2013) (format=pdflatex 2014.5.31)  14 DEC 2015 17:43
 entering extended mode
  \write18 enabled.
  file:line:error style messages enabled.
@@ -741,43 +741,70 @@ Package caption Info: float package is loaded.
 \Urlmuskip=\muskip11
 Package: url 2013/09/16  ver 3.4  Verb mode for urls, etc.
 )
+(/usr/local/texlive/2013/texmf-dist/tex/latex/geometry/geometry.sty
+Package: geometry 2010/09/12 v5.6 Page Geometry
+
+(/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/ifpdf.sty
+Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
+Package ifpdf Info: pdfTeX in PDF mode is detected.
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/ifvtex.sty
+Package: ifvtex 2010/03/01 v1.5 Detect VTeX and its facilities (HO)
+Package ifvtex Info: VTeX not detected.
+)
+(/usr/local/texlive/2013/texmf-dist/tex/generic/ifxetex/ifxetex.sty
+Package: ifxetex 2010/09/12 v0.6 Provides ifxetex conditional
+)
+\Gm@cnth=\count147
+\Gm@cntv=\count148
+\c@Gm@tempcnt=\count149
+\Gm@bindingoffset=\dimen193
+\Gm@wd@mp=\dimen194
+\Gm@odd@mp=\dimen195
+\Gm@even@mp=\dimen196
+\Gm@layoutwidth=\dimen197
+\Gm@layoutheight=\dimen198
+\Gm@layouthoffset=\dimen199
+\Gm@layoutvoffset=\dimen200
+\Gm@dimlist=\toks44
+)
 (/Users/manishraghavan/Desktop/fa15/eecs149/proj/ee149_project/writeup/report.a
 ux)
 \openout1 = `report.aux'.
 
-LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 10.
-LaTeX Font Info:    ... okay on input line 10.
-LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 10.
-LaTeX Font Info:    Try loading font information for TS1+cmr on input line 10.
+LaTeX Font Info:    Checking defaults for OML/cmm/m/it on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for T1/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OT1/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OMS/cmsy/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for OMX/cmex/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for U/cmr/m/n on input line 11.
+LaTeX Font Info:    ... okay on input line 11.
+LaTeX Font Info:    Checking defaults for TS1/cmr/m/n on input line 11.
+LaTeX Font Info:    Try loading font information for TS1+cmr on input line 11.
  (/usr/local/texlive/2013/texmf-dist/tex/latex/base/ts1cmr.fd
 File: ts1cmr.fd 1999/05/25 v2.5h Standard LaTeX font definitions
 )
-LaTeX Font Info:    ... okay on input line 10.
+LaTeX Font Info:    ... okay on input line 11.
 
 ABD: EveryShipout initializing macros
 (/usr/local/texlive/2013/texmf-dist/tex/context/base/supp-pdf.mkii
 [Loading MPS to PDF converter (version 2006.09.02).]
-\scratchcounter=\count147
-\scratchdimen=\dimen193
+\scratchcounter=\count150
+\scratchdimen=\dimen201
 \scratchbox=\box88
-\nofMPsegments=\count148
-\nofMParguments=\count149
-\everyMPshowfont=\toks44
-\MPscratchCnt=\count150
-\MPscratchDim=\dimen194
-\MPnumerator=\count151
-\makeMPintoPDFobject=\count152
-\everyMPtoPDFconversion=\toks45
+\nofMPsegments=\count151
+\nofMParguments=\count152
+\everyMPshowfont=\toks45
+\MPscratchCnt=\count153
+\MPscratchDim=\dimen202
+\MPnumerator=\count154
+\makeMPintoPDFobject=\count155
+\everyMPtoPDFconversion=\toks46
 ) (/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/pdftexcmds.sty
 Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 )
@@ -785,10 +812,6 @@ Package: pdftexcmds 2011/11/29 v0.20 Utility functions of pdfTeX for LuaTeX (HO
 (/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/ifluatex.sty
 Package: ifluatex 2010/03/01 v1.3 Provides the ifluatex switch (HO)
 Package ifluatex Info: LuaTeX not detected.
-)
-(/usr/local/texlive/2013/texmf-dist/tex/generic/oberdiek/ifpdf.sty
-Package: ifpdf 2011/01/30 v2.3 Provides the ifpdf switch (HO)
-Package ifpdf Info: pdfTeX in PDF mode is detected.
 )
 Package pdftexcmds Info: LuaTeX not detected.
 Package pdftexcmds Info: \pdf@primitive is available.
@@ -828,17 +851,51 @@ e
 ))
 Package caption Info: Begin \AtBeginDocument code.
 Package caption Info: End \AtBeginDocument code.
-LaTeX Font Info:    Try loading font information for U+rsfs on input line 44.
 
+*geometry* driver: auto-detecting
+*geometry* detected driver: pdftex
+*geometry* verbose mode - [ preamble ] result:
+* driver: pdftex
+* paper: <default>
+* layout: <same size as paper>
+* layoutoffset:(h,v)=(0.0pt,0.0pt)
+* modes: 
+* h-part:(L,W,R)=(56.9055pt, 500.484pt, 56.9055pt)
+* v-part:(T,H,B)=(56.9055pt, 681.15898pt, 56.9055pt)
+* \paperwidth=614.295pt
+* \paperheight=794.96999pt
+* \textwidth=500.484pt
+* \textheight=681.15898pt
+* \oddsidemargin=-15.36449pt
+* \evensidemargin=-15.36449pt
+* \topmargin=-52.36449pt
+* \headheight=12.0pt
+* \headsep=25.0pt
+* \topskip=10.0pt
+* \footskip=30.0pt
+* \marginparwidth=65.0pt
+* \marginparsep=11.0pt
+* \columnsep=10.0pt
+* \skip\footins=9.0pt plus 4.0pt minus 2.0pt
+* \hoffset=0.0pt
+* \voffset=0.0pt
+* \mag=1000
+* \@twocolumnfalse
+* \@twosidefalse
+* \@mparswitchfalse
+* \@reversemarginfalse
+* (1in=72.27pt=25.4mm, 1cm=28.453pt)
+
+LaTeX Font Info:    Try loading font information for U+rsfs on input line 46.
 (/usr/local/texlive/2013/texmf-dist/tex/latex/jknapltx/ursfs.fd
 File: ursfs.fd 1998/03/24 rsfs font definition file (jk)
 )
-LaTeX Font Info:    Try loading font information for U+msa on input line 44.
+LaTeX Font Info:    Try loading font information for U+msa on input line 46.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/umsa.fd
 File: umsa.fd 2013/01/14 v3.01 AMS symbols A
 )
-LaTeX Font Info:    Try loading font information for U+msb on input line 44.
+LaTeX Font Info:    Try loading font information for U+msb on input line 46.
 
 (/usr/local/texlive/2013/texmf-dist/tex/latex/amsfonts/umsb.fd
 File: umsb.fd 2013/01/14 v3.01 AMS symbols B
@@ -851,7 +908,7 @@ Package epstopdf Info: Source file: <../spline_basis.eps>
 (epstopdf)                    size: 8269 bytes
 (epstopdf)             Command: <epstopdf --outfile=../spline_basis-eps-convert
 ed-to.pdf ../spline_basis.eps>
-(epstopdf)             \includegraphics on input line 87.
+(epstopdf)             \includegraphics on input line 90.
 Package epstopdf Info: Output file is already uptodate.
 
 <../spline_basis-eps-converted-to.pdf, id=4, 578.16pt x 433.62pt>
@@ -859,16 +916,13 @@ File: ../spline_basis-eps-converted-to.pdf Graphic file (type pdf)
 
 <use ../spline_basis-eps-converted-to.pdf>
 Package pdftex.def Info: ../spline_basis-eps-converted-to.pdf used on input lin
-e 87.
+e 90.
 (pdftex.def)             Requested size: 256.0748pt x 192.05052pt.
 
-Overfull \hbox (26.19731pt too wide) in paragraph at lines 87--88
+Overfull \hbox (10.83281pt too wide) in paragraph at lines 90--91
 [][] 
  []
 
-[1
-
-{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map}]
 Package epstopdf Info: Source file: <../s_img/spline8.eps>
 (epstopdf)                    date: 2015-12-13 23:23:59
 (epstopdf)                    size: 189461 bytes
@@ -877,19 +931,26 @@ Package epstopdf Info: Source file: <../s_img/spline8.eps>
 (epstopdf)                    size: 7987 bytes
 (epstopdf)             Command: <epstopdf --outfile=../s_img/spline8-eps-conver
 ted-to.pdf ../s_img/spline8.eps>
-(epstopdf)             \includegraphics on input line 91.
+(epstopdf)             \includegraphics on input line 94.
 Package epstopdf Info: Output file is already uptodate.
-
-<../s_img/spline8-eps-converted-to.pdf, id=14, 578.16pt x 433.62pt>
+<../s_img/spline8-eps-converted-to.pdf, id=5, 578.16pt x 433.62pt>
 File: ../s_img/spline8-eps-converted-to.pdf Graphic file (type pdf)
 
 <use ../s_img/spline8-eps-converted-to.pdf>
 Package pdftex.def Info: ../s_img/spline8-eps-converted-to.pdf used on input li
-ne 91.
+ne 94.
 (pdftex.def)             Requested size: 256.0748pt x 192.05052pt.
 
-Overfull \hbox (26.19731pt too wide) in paragraph at lines 91--92
+Overfull \hbox (10.83281pt too wide) in paragraph at lines 94--95
 [][] 
+ []
+
+[1
+
+{/usr/local/texlive/2013/texmf-var/fonts/map/pdftex/updmap/pdftex.map} <../spli
+ne_basis-eps-converted-to.pdf>]
+Underfull \hbox (badness 10000) in paragraph at lines 129--132
+\OT1/cmr/m/n/10 Solving for these gives us the con-trol points
  []
 
 Package epstopdf Info: Source file: <../plots/roc.eps>
@@ -900,64 +961,77 @@ Package epstopdf Info: Source file: <../plots/roc.eps>
 (epstopdf)                    size: 7322 bytes
 (epstopdf)             Command: <epstopdf --outfile=../plots/roc-eps-converted-
 to.pdf ../plots/roc.eps>
-(epstopdf)             \includegraphics on input line 148.
+(epstopdf)             \includegraphics on input line 178.
 Package epstopdf Info: Output file is already uptodate.
-<../plots/roc-eps-converted-to.pdf, id=15, 578.16pt x 433.62pt>
+<../plots/roc-eps-converted-to.pdf, id=25, 578.16pt x 433.62pt>
 File: ../plots/roc-eps-converted-to.pdf Graphic file (type pdf)
 
 <use ../plots/roc-eps-converted-to.pdf>
 Package pdftex.def Info: ../plots/roc-eps-converted-to.pdf used on input line 1
-48.
+78.
 (pdftex.def)             Requested size: 256.0748pt x 192.05052pt.
 
-Overfull \hbox (26.19731pt too wide) in paragraph at lines 148--149
+Overfull \hbox (10.83281pt too wide) in paragraph at lines 178--179
 [][] 
  []
 
-[2 <../spline_basis-eps-converted-to.pdf> <../s_img/spline8-eps-converted-to.pd
-f>] <../plots/s_plot.png, id=40, 578.16pt x 433.62pt>
+[2 <../s_img/spline8-eps-converted-to.pdf>]
+<../plots/circle_plot.png, id=42, 578.16pt x 433.62pt>
+File: ../plots/circle_plot.png Graphic file (type png)
+
+<use ../plots/circle_plot.png>
+Package pdftex.def Info: ../plots/circle_plot.png used on input line 195.
+(pdftex.def)             Requested size: 256.0748pt x 192.05052pt.
+
+Overfull \hbox (10.83281pt too wide) in paragraph at lines 195--196
+[][] 
+ []
+
+<../plots/s_plot.png, id=44, 578.16pt x 433.62pt>
 File: ../plots/s_plot.png Graphic file (type png)
-
-<use ../plots/s_plot.png>
-Package pdftex.def Info: ../plots/s_plot.png used on input line 154.
+ <use ../plots/s_plot.png>
+Package pdftex.def Info: ../plots/s_plot.png used on input line 206.
 (pdftex.def)             Requested size: 256.0748pt x 192.05052pt.
 
-Overfull \hbox (26.19731pt too wide) in paragraph at lines 154--155
+Overfull \hbox (10.83281pt too wide) in paragraph at lines 206--207
 [][] 
  []
 
-
+[3 <../plots/roc-eps-converted-to.pdf> <../plots/circle_plot.png> <../plots/s_p
+lot.png>] [4]
 (/Users/manishraghavan/Desktop/fa15/eecs149/proj/ee149_project/writeup/report.b
-bl) [3 <../plots/roc-eps-converted-to.pdf> <../plots/s_plot.png>]
+bl) [5]
 (/Users/manishraghavan/Desktop/fa15/eecs149/proj/ee149_project/writeup/report.a
 ux) ) 
 Here is how much of TeX's memory you used:
- 16779 strings out of 493308
- 334812 string characters out of 6137816
- 377898 words of memory out of 5000000
- 19890 multiletter control sequences out of 15000+600000
+ 17260 strings out of 493308
+ 341990 string characters out of 6137816
+ 391914 words of memory out of 5000000
+ 20361 multiletter control sequences out of 15000+600000
  7869 words of font info for 32 fonts, out of 8000000 for 9000
  957 hyphenation exceptions out of 8191
- 62i,10n,68p,451b,934s stack positions out of 5000i,500n,10000p,200000b,80000s
+ 62i,10n,68p,451b,950s stack positions out of 5000i,500n,10000p,200000b,80000s
 {/usr/local/texlive/2013/texmf-dist/fonts/enc/dvips/cm-super/cm-super-ts1.
 enc}</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx10.p
 fb></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx12.pf
-b></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb
-></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb>
-</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb><
-/usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></u
-sr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr
-/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/l
-ocal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/loca
-l/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local
-/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/t
-exlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/te
-xlive/2013/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
+b></usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmbx7.pfb>
+</usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmex10.pfb><
+/usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi10.pfb></
+usr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi12.pfb></u
+sr/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmmi7.pfb></usr
+/local/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr10.pfb></usr/l
+ocal/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr12.pfb></usr/loc
+al/texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr5.pfb></usr/local/
+texlive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmr7.pfb></usr/local/tex
+live/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy10.pfb></usr/local/texl
+ive/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmsy7.pfb></usr/local/texliv
+e/2013/texmf-dist/fonts/type1/public/amsfonts/cm/cmtt10.pfb></usr/local/texlive
+/2013/texmf-dist/fonts/type1/public/cm-super/sfrm1000.pfb>
 Output written on /Users/manishraghavan/Desktop/fa15/eecs149/proj/ee149_project
-/writeup/report.pdf (3 pages, 177418 bytes).
+/writeup/report.pdf (5 pages, 237332 bytes).
 PDF statistics:
- 90 PDF objects out of 1000 (max. 8388607)
- 66 compressed objects within 1 object stream
+ 106 PDF objects out of 1000 (max. 8388607)
+ 76 compressed objects within 1 object stream
  0 named destinations out of 1000 (max. 500000)
- 33 words of extra memory for PDF output out of 10000 (max. 10000000)
+ 38 words of extra memory for PDF output out of 10000 (max. 10000000)
 
