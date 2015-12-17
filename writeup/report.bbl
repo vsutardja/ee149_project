@@ -7,10 +7,28 @@ Fuhua Cheng.
   2012.
 \newblock [Online; accessed 12-December-2015].
 
+\bibitem{centroid}
+OpenCV.
+\newblock Structural analysis and shape descriptors --- opencv 2.4.12.0
+  documentation.
+\newblock
+  \url{http://docs.opencv.org/2.4/modules/imgproc/doc/structural_analysis_and_shape_descriptors.html},
+  2014.
+\newblock [Online; accessed 12-December-2015].
+
 \bibitem{wiki:spline}
 Wikipedia.
 \newblock B-spline --- {W}ikipedia{,} the free encyclopedia.
 \newblock \url{https://en.wikipedia.org/wiki/B-spline}, 2015.
+\newblock [Online; accessed 12-December-2015].
+
+\bibitem{wiki:quat}
+Wikipedia.
+\newblock Conversion between quaternions and euler angles --- {W}ikipedia{,}
+  the free encyclopedia.
+\newblock
+  \url{https://en.wikipedia.org/wiki/Conversion_between_quaternions_and_Euler_angles},
+  2015.
 \newblock [Online; accessed 12-December-2015].
 
 \end{thebibliography}
